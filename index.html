@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,13 +15,11 @@
                         chrome: {
                             bgLight: '#dee1e6',
                             toolbarLight: '#f1f3f4',
-                            tabLight: '#f1f3f4',
                             activeTabLight: '#ffffff',
-                            bgDark: '#1f2023',
-                            toolbarDark: '#292a2d',
-                            tabDark: '#292a2d',
-                            activeTabDark: '#35363a',
-                            accent: '#1a73e8'
+                            bgDark: '#1a1b1e',
+                            toolbarDark: '#222327',
+                            activeTabDark: '#2c2d32',
+                            accent: '#3b82f6'
                         }
                     }
                 }
@@ -29,209 +27,187 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Custom scrollbar for bookmarks and speed dial */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(156, 163, 175, 0.4);
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(156, 163, 175, 0.6);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.5); }
     </style>
 </head>
-<body class="h-full bg-slate-100 dark:bg-zinc-950 text-slate-800 dark:text-slate-200 flex flex-col overflow-hidden transition-colors duration-200">
+<body class="h-full bg-slate-900 text-slate-100 flex flex-col overflow-hidden select-none">
 
-    <!-- Top Browser Header & Tab Bar -->
-    <div class="bg-chrome-bgLight dark:bg-chrome-bgDark pt-2 px-2 flex items-center select-none border-b border-gray-300 dark:border-zinc-800">
-        <!-- Window Control Buttons (Decorative Mac-style) -->
+    <!-- Top Chrome Header / Tab Bar -->
+    <div class="bg-chrome-bgDark pt-2 px-2 flex items-center border-b border-zinc-800">
+        <!-- Mac Style Window Buttons -->
         <div class="flex items-center space-x-2 px-2 mr-3">
             <span class="w-3 h-3 rounded-full bg-red-500 inline-block hover:opacity-80 cursor-pointer"></span>
             <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block hover:opacity-80 cursor-pointer"></span>
             <span class="w-3 h-3 rounded-full bg-green-500 inline-block hover:opacity-80 cursor-pointer"></span>
         </div>
 
-        <!-- Tab List Container -->
-        <div id="tabsContainer" class="flex items-center space-x-1 overflow-x-auto max-w-[calc(100vw-180px)] scrollbar-none">
-            <!-- Tabs rendered dynamically via JS -->
+        <!-- Dynamic Tabs Bar -->
+        <div id="tabsContainer" class="flex items-center space-x-1 overflow-x-auto max-w-[calc(100vw-320px)] scrollbar-none">
+            <!-- Rendered by JS -->
         </div>
 
         <!-- New Tab Button -->
-        <button id="newTabBtn" class="p-1.5 ml-1 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-zinc-700 rounded-full transition-colors" title="New Tab">
+        <button id="newTabBtn" class="p-1.5 ml-1 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="New Tab">
             <i class="fa-solid fa-plus text-xs"></i>
         </button>
 
         <div class="ml-auto flex items-center space-x-2 pr-2">
-            <!-- Dark / Light Theme Toggle -->
-            <button id="themeToggleBtn" class="p-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-zinc-700 rounded-full transition-colors" title="Toggle Theme">
-                <i class="fa-solid fa-moon dark:hidden text-xs"></i>
-                <i class="fa-solid fa-sun hidden dark:inline text-xs"></i>
+            <!-- DevTools Console Toggle -->
+            <button id="toggleDevToolsBtn" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800 hover:bg-zinc-700 text-slate-300 flex items-center space-x-1.5 border border-zinc-700 transition-colors">
+                <i class="fa-solid fa-terminal text-blue-400"></i>
+                <span>Proxy Logs</span>
             </button>
         </div>
     </div>
 
-    <!-- Toolbar: Nav Controls, Address Bar & Options -->
-    <div class="bg-chrome-toolbarLight dark:bg-chrome-toolbarDark p-2 flex items-center space-x-2 shadow-sm border-b border-gray-200 dark:border-zinc-800">
+    <!-- Navigation Toolbar -->
+    <div class="bg-chrome-toolbarDark p-2 flex items-center space-x-2 shadow-sm border-b border-zinc-800">
         <!-- Back Button -->
-        <button id="backBtn" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-zinc-700 disabled:opacity-40 rounded-full transition-colors" title="Back">
+        <button id="backBtn" class="p-2 text-slate-400 hover:bg-zinc-800 disabled:opacity-30 rounded-full transition-colors" title="Back">
             <i class="fa-solid fa-arrow-left text-sm"></i>
         </button>
         <!-- Forward Button -->
-        <button id="forwardBtn" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-zinc-700 disabled:opacity-40 rounded-full transition-colors" title="Forward">
+        <button id="forwardBtn" class="p-2 text-slate-400 hover:bg-zinc-800 disabled:opacity-30 rounded-full transition-colors" title="Forward">
             <i class="fa-solid fa-arrow-right text-sm"></i>
         </button>
         <!-- Reload Button -->
-        <button id="reloadBtn" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-full transition-colors" title="Reload">
+        <button id="reloadBtn" class="p-2 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="Reload">
             <i class="fa-solid fa-rotate-right text-sm"></i>
         </button>
         <!-- Home Button -->
-        <button id="homeBtn" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-full transition-colors" title="Home (Speed Dial)">
+        <button id="homeBtn" class="p-2 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="Home (Speed Dial)">
             <i class="fa-solid fa-house text-sm"></i>
         </button>
 
-        <!-- Address Bar / URL Form -->
+        <!-- Mode Selector Switcher -->
+        <div class="relative group">
+            <select id="modeSelector" class="bg-zinc-900 border border-zinc-700 text-xs text-slate-200 py-1.5 px-2.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer font-medium">
+                <option value="proxy">⚡ Proxy Engine (Bypass X-Frame)</option>
+                <option value="direct">🌐 Direct Embed (Standard Iframe)</option>
+                <option value="text">📄 Text / Code Viewer</option>
+            </select>
+        </div>
+
+        <!-- Address Bar Form -->
         <form id="urlForm" class="flex-1 flex items-center relative">
-            <div class="absolute left-3 text-slate-400 dark:text-slate-500 text-xs">
-                <i id="securityIcon" class="fa-solid fa-lock"></i>
+            <div class="absolute left-3 text-slate-500 text-xs flex items-center space-x-1.5">
+                <i id="securityIcon" class="fa-solid fa-shield-halved text-emerald-400"></i>
             </div>
-            <input id="urlInput" type="text" placeholder="Search with Google or type a URL..."
-                   class="w-full bg-white dark:bg-zinc-900 text-slate-800 dark:text-slate-100 text-sm pl-8 pr-20 py-1.5 rounded-full border border-gray-300 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner">
+            <input id="urlInput" type="text" placeholder="Search with DuckDuckGo or enter URL (e.g. github.com)..."
+                   class="w-full bg-zinc-900 text-slate-100 text-sm pl-8 pr-24 py-1.5 rounded-full border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner">
             <div class="absolute right-2 flex items-center space-x-1">
-                <!-- Bookmark Star Button -->
-                <button type="button" id="bookmarkBtn" class="p-1 text-slate-400 hover:text-yellow-500 transition-colors" title="Bookmark this page">
+                <button type="button" id="bookmarkBtn" class="p-1 text-slate-500 hover:text-yellow-400 transition-colors" title="Bookmark page">
                     <i class="fa-regular fa-star text-sm"></i>
                 </button>
-                <!-- Go / Submit Button -->
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-2.5 py-1 rounded-full font-medium transition-colors">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-full font-medium transition-colors">
                     Go
                 </button>
             </div>
         </form>
 
-        <!-- Open in New Tab Utility Button -->
-        <button id="externalOpenBtn" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-full transition-colors" title="Open Current URL in External Tab">
+        <!-- Proxy Provider Settings Dropdown -->
+        <select id="proxyEngineSelector" class="bg-zinc-900 border border-zinc-700 text-xs text-slate-300 py-1.5 px-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <option value="corsproxy">Proxy: CorsProxy.io</option>
+            <option value="allorigins">Proxy: AllOrigins.win</option>
+            <option value="codetabs">Proxy: CodeTabs</option>
+        </select>
+
+        <!-- External Tab Button -->
+        <button id="externalOpenBtn" class="p-2 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="Open URL in Real Browser Tab">
             <i class="fa-solid fa-up-right-from-square text-sm"></i>
         </button>
-
-        <!-- Toggle Bookmarks Bar Button -->
-        <button id="toggleBookmarksBtn" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-full transition-colors" title="Toggle Bookmarks Bar">
-            <i class="fa-solid fa-bookmark text-sm"></i>
-        </button>
     </div>
 
-    <!-- Bookmarks Bar -->
-    <div id="bookmarksBar" class="bg-chrome-toolbarLight dark:bg-chrome-toolbarDark px-3 py-1 flex items-center space-x-2 border-b border-gray-200 dark:border-zinc-800 overflow-x-auto text-xs text-slate-600 dark:text-slate-400">
-        <!-- Bookmarks rendered dynamically -->
-    </div>
-
-    <!-- IFrame Security Warning Banner -->
-    <div id="iframeWarning" class="bg-amber-500/10 border-b border-amber-500/20 px-4 py-1.5 text-xs text-amber-700 dark:text-amber-300 flex items-center justify-between">
-        <div class="flex items-center space-x-2 overflow-hidden">
-            <i class="fa-solid fa-triangle-exclamation flex-shrink-0 text-amber-500"></i>
-            <span class="truncate">
-                <strong>IFrame Limitation Notice:</strong> Many websites (e.g., Google, YouTube, GitHub, Twitter) enforce security headers (<code class="bg-amber-500/20 px-1 rounded">X-Frame-Options</code> or <code class="bg-amber-500/20 px-1 rounded">CSP</code>) that block embedding.
-            </span>
+    <!-- Loading & Status Bar -->
+    <div id="statusBar" class="bg-zinc-950 px-4 py-1 text-xs text-slate-400 border-b border-zinc-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+            <span id="statusSpinner" class="hidden"><i class="fa-solid fa-circle-notch fa-spin text-blue-400"></i></span>
+            <span id="statusText">Ready</span>
         </div>
-        <div class="flex items-center space-x-2 flex-shrink-0 ml-2">
-            <button id="warningOpenNewTab" class="underline hover:text-amber-800 dark:hover:text-amber-100 font-semibold">
-                Open in New Tab
-            </button>
-            <button id="dismissWarning" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 ml-2">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+        <div class="flex items-center space-x-4 text-[11px] text-slate-500">
+            <span id="proxyLatency">Latency: --</span>
+            <span id="linksRewrittenCount">Links Hijacked: 0</span>
         </div>
     </div>
 
-    <!-- Main Content Viewport -->
-    <div class="flex-1 relative bg-white dark:bg-zinc-900 overflow-hidden">
+    <!-- Main Content Area -->
+    <div class="flex-1 relative bg-zinc-950 overflow-hidden flex">
         
-        <!-- Speed Dial Container (Default Home Page) -->
-        <div id="speedDialView" class="absolute inset-0 z-10 overflow-y-auto p-6 flex flex-col items-center bg-slate-50 dark:bg-zinc-950">
+        <!-- Speed Dial / Home Dashboard -->
+        <div id="speedDialView" class="absolute inset-0 z-10 overflow-y-auto p-6 flex flex-col items-center bg-zinc-950">
             <div class="max-w-4xl w-full flex flex-col items-center mt-6 mb-8">
-                <!-- Browser Brand Logo -->
-                <div class="flex items-center space-x-3 mb-6">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                        <i class="fa-solid fa-compass text-white text-2xl"></i>
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <i class="fa-solid fa-bolt text-white text-2xl"></i>
                     </div>
-                    <h1 class="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 bg-clip-text text-transparent">
-                        Nexus Browser | Made by Mogger!
+                    <h1 class="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                        Nexus Proxy Browser | Made by Mogger!
                     </h1>
                 </div>
-
-                <!-- Speed Dial Search Box -->
-                <div class="w-full max-w-xl mb-10">
-                    <form id="speedDialForm" class="relative">
-                        <input type="text" id="speedDialSearch" placeholder="Search the web or type a URL..."
-                               class="w-full bg-white dark:bg-zinc-900 text-slate-800 dark:text-slate-100 text-base px-5 py-3.5 pl-12 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-xl text-sm font-medium transition-colors">
-                            Search
-                        </button>
-                    </form>
-                </div>
+                <p class="text-sm text-slate-400 mb-6 text-center max-w-lg">
+                    Client-side browser simulator that fetches site HTML via CORS proxy pipelines, rewrites links, strips X-Frame-Options/CSP restrictions, and renders inside sandboxed <code class="text-blue-400 bg-zinc-900 px-1 rounded">srcdoc</code> frames.
+                </p>
 
                 <!-- Speed Dial Grid -->
-                <div class="w-full">
-                    <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4 px-1">
-                        Embed-Friendly Sites (Guaranteed to Load)
+                <div class="w-full mt-4">
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 px-1">
+                        Popular Presets (Bypass Demo)
                     </h2>
                     <div id="speedDialGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        <!-- Speed dial items rendered dynamically -->
+                        <!-- Rendered by JS -->
                     </div>
-                </div>
-
-                <!-- Web Embedding Info Box -->
-                <div class="w-full mt-10 p-4 rounded-xl bg-blue-50 dark:bg-zinc-900/60 border border-blue-100 dark:border-zinc-800 text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                    <div class="font-semibold text-blue-900 dark:text-blue-400 mb-1 flex items-center space-x-1.5">
-                        <i class="fa-solid fa-circle-info"></i>
-                        <span>How IFrame Embedding Works</span>
-                    </div>
-                    Websites like <strong>Wikipedia, Bing, Archive.org, OpenStreetMap, and CodePen</strong> allow iframe embedding. Sites like <strong>Google, Facebook, and YouTube</strong> restrict embedding for security reasons. If a site appears blank, click the <i class="fa-solid fa-up-right-from-square"></i> button to open it in a new window.
                 </div>
             </div>
         </div>
 
-        <!-- Dynamic IFrames Container -->
-        <div id="iframeContainer" class="w-full h-full relative">
-            <!-- IFrames created dynamically for active tabs -->
+        <!-- Render Viewport Containers -->
+        <div id="viewportContainer" class="w-full h-full relative flex-1">
+            <!-- Dynamic IFrames created per tab -->
         </div>
 
+        <!-- Code/Text View Panel -->
+        <div id="textViewPanel" class="hidden absolute inset-0 z-20 bg-zinc-950 p-4 overflow-auto">
+            <pre id="textContent" class="text-xs text-green-400 font-mono whitespace-pre-wrap break-all"></pre>
+        </div>
+
+        <!-- DevTools Log Panel -->
+        <div id="devToolsPanel" class="hidden w-80 bg-zinc-900 border-l border-zinc-800 flex flex-col z-30">
+            <div class="p-2.5 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between text-xs font-semibold">
+                <span class="flex items-center space-x-1.5">
+                    <i class="fa-solid fa-terminal text-blue-400"></i>
+                    <span>Proxy Console Logs</span>
+                </span>
+                <button id="clearLogsBtn" class="text-slate-500 hover:text-slate-300 text-[10px]">Clear</button>
+            </div>
+            <div id="logOutput" class="flex-1 p-3 font-mono text-[11px] overflow-y-auto space-y-2 text-slate-300">
+                <!-- Logs rendered by JS -->
+            </div>
+        </div>
     </div>
 
     <script>
-        // Preset Speed Dial Shortcuts (Sites known to support iframe embedding)
+        // Preset speed dial bookmarks
         const PRESET_SITES = [
-            { name: "Wikipedia", url: "https://www.wikipedia.org", icon: "fa-wikipedia-w", color: "bg-slate-700" },
-            { name: "Bing Search", url: "https://www.bing.com", icon: "fa-brands fa-microsoft", color: "bg-teal-600" },
-            { name: "OpenStreetMap", url: "https://www.openstreetmap.org", icon: "fa-map-location-dot", color: "bg-emerald-600" },
-            { name: "CodePen", url: "https://codepen.io", icon: "fa-codepen", color: "bg-zinc-800" },
-            { name: "Archive.org", url: "https://archive.org", icon: "fa-building-columns", color: "bg-amber-700" },
-            { name: "Hacker News", url: "https://news.ycombinator.com", icon: "fa-y-combinator", color: "bg-orange-600" },
-            { name: "DuckDuckGo", url: "https://html.duckduckgo.com/html/", icon: "fa-duotone fa-duck", color: "bg-red-600" },
-            { name: "W3Schools", url: "https://www.w3schools.com", icon: "fa-code", color: "bg-green-600" }
+            { name: "DuckDuckGo", url: "https://html.duckduckgo.com/html/", icon: "fa-solid fa-shield-halved", color: "bg-orange-600" },
+            { name: "GitHub Trending", url: "https://github.com/trending", icon: "fa-brands fa-github", color: "bg-zinc-800" },
+            { name: "Wikipedia", url: "https://www.wikipedia.org", icon: "fa-brands fa-wikipedia-w", color: "bg-slate-700" },
+            { name: "Hacker News", url: "https://news.ycombinator.com", icon: "fa-brands fa-y-combinator", color: "bg-amber-600" },
+            { name: "BBC News", url: "https://www.bbc.com/news", icon: "fa-solid fa-newspaper", color: "bg-red-700" },
+            { name: "OpenStreetMap", url: "https://www.openstreetmap.org", icon: "fa-solid fa-map-location-dot", color: "bg-emerald-600" }
         ];
 
-        // Initial State
+        // State variables
         let tabs = [];
         let activeTabId = null;
-        let bookmarks = JSON.parse(localStorage.getItem('nexus_bookmarks')) || [
-            { name: "Wikipedia", url: "https://www.wikipedia.org" },
-            { name: "Bing", url: "https://www.bing.com" },
-            { name: "OpenStreetMap", url: "https://www.openstreetmap.org" },
-            { name: "CodePen", url: "https://codepen.io" }
-        ];
+        let logs = [];
 
-        // DOM Elements
+        // DOM elements
         const tabsContainer = document.getElementById('tabsContainer');
         const newTabBtn = document.getElementById('newTabBtn');
         const urlForm = document.getElementById('urlForm');
@@ -240,82 +216,139 @@
         const forwardBtn = document.getElementById('forwardBtn');
         const reloadBtn = document.getElementById('reloadBtn');
         const homeBtn = document.getElementById('homeBtn');
-        const bookmarkBtn = document.getElementById('bookmarkBtn');
-        const bookmarksBar = document.getElementById('bookmarksBar');
-        const toggleBookmarksBtn = document.getElementById('toggleBookmarksBtn');
-        const iframeContainer = document.getElementById('iframeContainer');
+        const modeSelector = document.getElementById('modeSelector');
+        const proxyEngineSelector = document.getElementById('proxyEngineSelector');
         const speedDialView = document.getElementById('speedDialView');
         const speedDialGrid = document.getElementById('speedDialGrid');
-        const speedDialForm = document.getElementById('speedDialForm');
-        const speedDialSearch = document.getElementById('speedDialSearch');
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const viewportContainer = document.getElementById('viewportContainer');
+        const textViewPanel = document.getElementById('textViewPanel');
+        const textContent = document.getElementById('textContent');
+        const devToolsPanel = document.getElementById('devToolsPanel');
+        const toggleDevToolsBtn = document.getElementById('toggleDevToolsBtn');
+        const logOutput = document.getElementById('logOutput');
+        const clearLogsBtn = document.getElementById('clearLogsBtn');
+        const statusSpinner = document.getElementById('statusSpinner');
+        const statusText = document.getElementById('statusText');
+        const proxyLatency = document.getElementById('proxyLatency');
+        const linksRewrittenCount = document.getElementById('linksRewrittenCount');
         const externalOpenBtn = document.getElementById('externalOpenBtn');
-        const iframeWarning = document.getElementById('iframeWarning');
-        const warningOpenNewTab = document.getElementById('warningOpenNewTab');
-        const dismissWarning = document.getElementById('dismissWarning');
 
-        // Initialize App
-        window.addEventListener('DOMContentLoaded', () => {
-            renderSpeedDial();
-            renderBookmarks();
-            createNewTab(); // Initialize with first home tab
-
-            // Check saved theme
-            if (localStorage.getItem('nexus_theme') === 'dark' || (!('nexus_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+        // Construct CORS Proxy URL
+        function buildProxyUrl(targetUrl, engine) {
+            switch(engine) {
+                case 'allorigins':
+                    return `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+                case 'codetabs':
+                    return `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
+                case 'corsproxy':
+                default:
+                    return `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
             }
-        });
-
-        // --- Tab Management Logic ---
-
-        function createNewTab(url = '') {
-            const tabId = 'tab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
-            const newTab = {
-                id: tabId,
-                title: url ? getHostname(url) : 'New Tab',
-                url: url,
-                history: url ? [url] : [''],
-                historyIndex: url ? 0 : 0,
-                isLoading: false
-            };
-
-            tabs.push(newTab);
-
-            // Create iframe element
-            const iframe = document.createElement('iframe');
-            iframe.id = `iframe_${tabId}`;
-            iframe.className = 'w-full h-full border-none hidden';
-            iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups');
-
-            iframeContainer.appendChild(iframe);
-
-            if (url) {
-                loadUrlInTab(tabId, url);
-            }
-
-            switchTab(tabId);
-            renderTabs();
         }
 
-        function switchTab(tabId) {
-            activeTabId = tabId;
-            const tab = getActiveTab();
+        // HTML Sanitizer & Link Rewriter Engine
+        function processAndRewriteHtml(rawHtml, baseUrl) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(rawHtml, 'text/html');
 
-            // Toggle active iframe visibility
-            tabs.forEach(t => {
-                const frame = document.getElementById(`iframe_${t.id}`);
-                if (frame) {
-                    if (t.id === tabId) {
-                        frame.classList.remove('hidden');
-                    } else {
-                        frame.classList.add('hidden');
-                    }
+            // 1. Inject base tag so relative CSS/JS/images load correctly
+            let baseEl = doc.querySelector('base');
+            if (!baseEl) {
+                baseEl = doc.createElement('base');
+                if (doc.head) doc.head.insertBefore(baseEl, doc.head.firstChild);
+            }
+            baseEl.setAttribute('href', baseUrl);
+
+            // 2. Remove frame-busting CSP meta tags
+            doc.querySelectorAll('meta[http-equiv="Content-Security-Policy"], meta[http-equiv="X-Frame-Options"]').forEach(el => el.remove());
+
+            // 3. Rewrite internal links so clicking navigates inside our proxy simulator
+            let hijackedCount = 0;
+            doc.querySelectorAll('a[href]').forEach(anchor => {
+                const href = anchor.getAttribute('href');
+                if (href && !href.startsWith('javascript:') && !href.startsWith('#')) {
+                    try {
+                        const absoluteUrl = new URL(href, baseUrl).href;
+                        anchor.setAttribute('data-original-href', absoluteUrl);
+                        // Prevent default target="_blank" forcing new window
+                        anchor.removeAttribute('target');
+                        anchor.setAttribute('onclick', `
+                            event.preventDefault();
+                            window.parent.postMessage({ type: 'NEXUS_NAVIGATE', url: '${absoluteUrl}' }, '*');
+                        `);
+                        hijackedCount++;
+                    } catch(e) {}
                 }
             });
 
-            // Update UI state based on active tab
+            // 4. Inject link hijacking listener script inside the frame
+            const bridgeScript = doc.createElement('script');
+            bridgeScript.textContent = `
+                document.addEventListener('click', function(e) {
+                    let target = e.target.closest('a');
+                    if (target && target.hasAttribute('data-original-href')) {
+                        e.preventDefault();
+                        const dest = target.getAttribute('data-original-href');
+                        window.parent.postMessage({ type: 'NEXUS_NAVIGATE', url: dest }, '*');
+                    }
+                }, true);
+            `;
+            if (doc.head) doc.head.appendChild(bridgeScript);
+
+            return {
+                html: doc.documentElement.outerHTML,
+                linksHijacked: hijackedCount
+            };
+        }
+
+        // Add Log Entry to DevTools
+        function addLog(msg, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            logs.push({ time, msg, type });
+            const logEl = document.createElement('div');
+            logEl.className = type === 'error' ? 'text-red-400' : (type === 'success' ? 'text-emerald-400' : 'text-slate-300');
+            logEl.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
+            logOutput.appendChild(logEl);
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+
+        // Tab Creator
+        function createTab(url = '') {
+            const id = 'tab_' + Date.now();
+            const tab = {
+                id,
+                title: url ? getHostname(url) : 'New Tab',
+                url: url,
+                mode: 'proxy',
+                history: url ? [url] : [''],
+                historyIndex: 0
+            };
+
+            tabs.push(tab);
+
+            // Create container iframe
+            const iframe = document.createElement('iframe');
+            iframe.id = `iframe_${id}`;
+            iframe.className = 'w-full h-full border-none hidden';
+            iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups');
+            viewportContainer.appendChild(iframe);
+
+            switchTab(id);
+            if (url) loadUrl(id, url);
+        }
+
+        function switchTab(id) {
+            activeTabId = id;
+            const tab = getActiveTab();
+
+            tabs.forEach(t => {
+                const frame = document.getElementById(`iframe_${t.id}`);
+                if (frame) {
+                    if (t.id === id) frame.classList.remove('hidden');
+                    else frame.classList.add('hidden');
+                }
+            });
+
             if (!tab.url) {
                 speedDialView.classList.remove('hidden');
                 urlInput.value = '';
@@ -324,36 +357,31 @@
                 urlInput.value = tab.url;
             }
 
-            updateNavButtons();
-            updateBookmarkButton();
+            modeSelector.value = tab.mode || 'proxy';
             renderTabs();
+            updateNavButtons();
         }
 
-        function closeTab(tabId, event) {
-            if (event) event.stopPropagation();
-
+        function closeTab(id, e) {
+            if (e) e.stopPropagation();
             if (tabs.length === 1) {
-                // If closing the last tab, reset it to home
                 const tab = tabs[0];
                 tab.url = '';
                 tab.title = 'New Tab';
                 tab.history = [''];
                 tab.historyIndex = 0;
-                const frame = document.getElementById(`iframe_${tab.id}`);
-                if (frame) frame.src = 'about:blank';
+                const iframe = document.getElementById(`iframe_${tab.id}`);
+                if (iframe) iframe.removeAttribute('srcdoc');
                 switchTab(tab.id);
                 return;
             }
 
-            const index = tabs.findIndex(t => t.id === tabId);
-            const iframe = document.getElementById(`iframe_${tabId}`);
-            if (iframe) iframe.remove();
+            const index = tabs.findIndex(t => t.id === id);
+            document.getElementById(`iframe_${id}`)?.remove();
+            tabs = tabs.filter(t => t.id !== id);
 
-            tabs = tabs.filter(t => t.id !== tabId);
-
-            if (activeTabId === tabId) {
-                const nextTab = tabs[Math.max(0, index - 1)];
-                switchTab(nextTab.id);
+            if (activeTabId === id) {
+                switchTab(tabs[Math.max(0, index - 1)].id);
             } else {
                 renderTabs();
             }
@@ -363,109 +391,29 @@
             tabsContainer.innerHTML = '';
             tabs.forEach(tab => {
                 const isActive = tab.id === activeTabId;
-                const tabEl = document.createElement('div');
-                tabEl.className = `group flex items-center space-x-2 px-3 py-1.5 rounded-t-lg text-xs font-medium cursor-pointer max-w-[160px] min-w-[100px] select-none transition-all ${
-                    isActive 
-                        ? 'bg-chrome-activeTabLight dark:bg-chrome-activeTabDark text-slate-800 dark:text-slate-100 shadow-sm border-t-2 border-blue-500' 
-                        : 'bg-transparent hover:bg-slate-200/60 dark:hover:bg-zinc-800/60 text-slate-600 dark:text-slate-400'
+                const el = document.createElement('div');
+                el.className = `flex items-center space-x-2 px-3 py-1.5 rounded-t-lg text-xs font-medium cursor-pointer max-w-[160px] min-w-[110px] select-none transition-all ${
+                    isActive ? 'bg-chrome-activeTabDark text-slate-100 border-t-2 border-blue-500' : 'text-slate-400 hover:bg-zinc-800'
                 }`;
+                el.onclick = () => switchTab(tab.id);
 
-                tabEl.onclick = () => switchTab(tab.id);
-
-                // Tab Favicon / Globe Icon
-                const icon = document.createElement('i');
-                icon.className = tab.url ? 'fa-solid fa-globe text-blue-500 text-xs flex-shrink-0' : 'fa-solid fa-compass text-slate-400 text-xs flex-shrink-0';
-
-                // Tab Title
-                const titleSpan = document.createElement('span');
-                titleSpan.className = 'truncate flex-1';
-                titleSpan.textContent = tab.title || 'New Tab';
-
-                // Close Button
-                const closeBtn = document.createElement('button');
-                closeBtn.className = 'p-0.5 rounded-full hover:bg-slate-300 dark:hover:bg-zinc-600 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity';
-                closeBtn.innerHTML = '<i class="fa-solid fa-xmark text-[10px] w-3 h-3 flex items-center justify-center"></i>';
-                closeBtn.onclick = (e) => closeTab(tab.id, e);
-
-                tabEl.appendChild(icon);
-                tabEl.appendChild(titleSpan);
-                tabEl.appendChild(closeBtn);
-
-                tabsContainer.appendChild(tabEl);
+                el.innerHTML = `
+                    <i class="fa-solid fa-globe text-blue-400 text-xs"></i>
+                    <span class="truncate flex-1">${tab.title || 'New Tab'}</span>
+                    <button class="text-slate-500 hover:text-slate-200 text-xs p-0.5" onclick="closeTab('${tab.id}', event)">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                tabsContainer.appendChild(el);
             });
-        }
-
-
-        function formatUrl(input) {
-            let query = input.trim();
-            if (!query) return '';
-
-            // If user typed a search query instead of URL
-            const isUrl = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/.*)?$/i.test(query);
-
-            if (!isUrl && !query.startsWith('http://') && !query.startsWith('https://')) {
-                // Return Bing search URL (since Bing embeds gracefully)
-                return `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
-            }
-
-            if (!query.startsWith('http://') && !query.startsWith('https://')) {
-                query = 'https://' + query;
-            }
-
-            return query;
-        }
-
-        function getHostname(urlStr) {
-            try {
-                const url = new URL(urlStr);
-                return url.hostname.replace('www.', '');
-            } catch (e) {
-                return urlStr;
-            }
-        }
-
-        function loadUrlInTab(tabId, rawUrl) {
-            const tab = tabs.find(t => t.id === tabId);
-            if (!tab) return;
-
-            const targetUrl = formatUrl(rawUrl);
-
-            if (!targetUrl) {
-                tab.url = '';
-                tab.title = 'New Tab';
-                speedDialView.classList.remove('hidden');
-                renderTabs();
-                return;
-            }
-
-            tab.url = targetUrl;
-            tab.title = getHostname(targetUrl);
-            tab.isLoading = true;
-
-            // Update history if new navigation
-            if (tab.history[tab.historyIndex] !== targetUrl) {
-                tab.history = tab.history.slice(0, tab.historyIndex + 1);
-                tab.history.push(targetUrl);
-                tab.historyIndex = tab.history.length - 1;
-            }
-
-            if (tabId === activeTabId) {
-                urlInput.value = targetUrl;
-                speedDialView.classList.add('hidden');
-                updateNavButtons();
-                updateBookmarkButton();
-            }
-
-            const iframe = document.getElementById(`iframe_${tabId}`);
-            if (iframe) {
-                iframe.src = targetUrl;
-            }
-
-            renderTabs();
         }
 
         function getActiveTab() {
             return tabs.find(t => t.id === activeTabId) || tabs[0];
+        }
+
+        function getHostname(url) {
+            try { return new URL(url).hostname; } catch(e) { return url; }
         }
 
         function updateNavButtons() {
@@ -474,174 +422,144 @@
             forwardBtn.disabled = tab.historyIndex >= tab.history.length - 1;
         }
 
+        async function loadUrl(tabId, inputUrl) {
+            const tab = tabs.find(t => t.id === tabId);
+            if (!tab) return;
 
-        function renderBookmarks() {
-            bookmarksBar.innerHTML = '';
-            if (bookmarks.length === 0) {
-                bookmarksBar.innerHTML = '<span class="italic text-slate-400">No bookmarks saved</span>';
+            let targetUrl = inputUrl.trim();
+            if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+                targetUrl = 'https://' + targetUrl;
+            }
+
+            tab.url = targetUrl;
+            tab.title = getHostname(targetUrl);
+            urlInput.value = targetUrl;
+            speedDialView.classList.add('hidden');
+            renderTabs();
+
+            const iframe = document.getElementById(`iframe_${tabId}`);
+
+            if (tab.mode === 'direct') {
+                // Direct iframe load
+                addLog(`Loading direct iframe for: ${targetUrl}`);
+                iframe.removeAttribute('srcdoc');
+                iframe.src = targetUrl;
+                statusText.textContent = 'Loaded directly';
                 return;
             }
 
-            bookmarks.forEach(bm => {
-                const btn = document.createElement('button');
-                btn.className = 'flex items-center space-x-1.5 px-2 py-0.5 rounded hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors flex-shrink-0';
-                btn.innerHTML = `
-                    <i class="fa-solid fa-globe text-slate-400 text-[10px]"></i>
-                    <span>${bm.name}</span>
+            // Proxy Engine Mode
+            statusSpinner.classList.remove('hidden');
+            statusText.textContent = `Fetching via Proxy engine...`;
+            const startTime = performance.now();
+
+            const proxyEngine = proxyEngineSelector.value;
+            const proxiedUrl = buildProxyUrl(targetUrl, proxyEngine);
+
+            addLog(`Requesting proxy: ${proxiedUrl}`);
+
+            try {
+                const response = await fetch(proxiedUrl);
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                
+                const htmlText = await response.text();
+                const latency = Math.round(performance.now() - startTime);
+                proxyLatency.textContent = `Latency: ${latency}ms`;
+
+                addLog(`Successfully fetched (${htmlText.length} bytes in ${latency}ms)`, 'success');
+
+                if (tab.mode === 'text') {
+                    textContent.textContent = htmlText;
+                    textViewPanel.classList.remove('hidden');
+                } else {
+                    textViewPanel.classList.add('hidden');
+                    // Process HTML and rewrite relative links
+                    const { html, linksHijacked } = processAndRewriteHtml(htmlText, targetUrl);
+                    linksRewrittenCount.textContent = `Links Hijacked: ${linksHijacked}`;
+                    addLog(`Rewrote ${linksHijacked} links and injected base tag`, 'success');
+
+                    iframe.removeAttribute('src');
+                    iframe.srcdoc = html;
+                }
+
+                statusText.textContent = 'Rendered via Proxy Engine';
+            } catch (err) {
+                addLog(`Proxy Error: ${err.message}`, 'error');
+                statusText.textContent = 'Proxy failed. Switching fallback...';
+                
+                // Fallback display
+                iframe.srcdoc = `
+                    <div style="font-family: sans-serif; padding: 40px; color: #e2e8f0; background: #090d16; height: 100vh;">
+                        <h2 style="color: #f87171;">Proxy Fetch Failed</h2>
+                        <p>Could not fetch <code>${targetUrl}</code> using current proxy configuration.</p>
+                        <p>Error details: ${err.message}</p>
+                        <button onclick="window.parent.postMessage({type:'NEXUS_RETRY'}, '*')" style="background:#2563eb; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Retry</button>
+                    </div>
                 `;
-                btn.onclick = () => loadUrlInTab(activeTabId, bm.url);
-                bookmarksBar.appendChild(btn);
-            });
-        }
-
-        function updateBookmarkButton() {
-            const tab = getActiveTab();
-            const isBookmarked = bookmarks.some(b => b.url === tab.url);
-            const icon = bookmarkBtn.querySelector('i');
-
-            if (isBookmarked) {
-                icon.className = 'fa-solid fa-star text-yellow-500 text-sm';
-            } else {
-                icon.className = 'fa-regular fa-star text-slate-400 text-sm';
+            } finally {
+                statusSpinner.classList.add('hidden');
             }
         }
 
-        function toggleBookmark() {
-            const tab = getActiveTab();
-            if (!tab.url) return;
-
-            const existingIndex = bookmarks.findIndex(b => b.url === tab.url);
-            if (existingIndex >= 0) {
-                bookmarks.splice(existingIndex, 1);
-            } else {
-                bookmarks.push({
-                    name: tab.title || getHostname(tab.url),
-                    url: tab.url
-                });
-            }
-
-            localStorage.setItem('nexus_bookmarks', JSON.stringify(bookmarks));
-            renderBookmarks();
-            updateBookmarkButton();
-        }
-
+        // Speed dial renderer
         function renderSpeedDial() {
             speedDialGrid.innerHTML = '';
             PRESET_SITES.forEach(site => {
                 const card = document.createElement('div');
-                card.className = 'group bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 p-4 rounded-xl shadow-sm hover:shadow-md hover:border-blue-500 dark:hover:border-blue-500 transition-all cursor-pointer flex flex-col items-center justify-center space-y-3';
-                card.onclick = () => loadUrlInTab(activeTabId, site.url);
-
+                card.className = 'bg-zinc-900 border border-zinc-800 p-4 rounded-xl hover:border-blue-500 transition-all cursor-pointer flex flex-col items-center space-y-3';
+                card.onclick = () => loadUrl(activeTabId, site.url);
                 card.innerHTML = `
-                    <div class="w-12 h-12 rounded-xl ${site.color} text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
-                        <i class="fa-solid ${site.icon}"></i>
+                    <div class="w-10 h-10 rounded-lg ${site.color} text-white flex items-center justify-center text-lg">
+                        <i class="${site.icon}"></i>
                     </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300 group-hover:text-blue-500 transition-colors text-center truncate w-full">
-                        ${site.name}
-                    </span>
+                    <span class="text-xs font-medium text-slate-300 truncate w-full text-center">${site.name}</span>
                 `;
                 speedDialGrid.appendChild(card);
             });
         }
 
+        // Cross-frame iframe postMessage listener
+        window.addEventListener('message', (event) => {
+            if (event.data?.type === 'NEXUS_NAVIGATE') {
+                addLog(`Intercepted cross-frame link click -> ${event.data.url}`);
+                loadUrl(activeTabId, event.data.url);
+            } else if (event.data?.type === 'NEXUS_RETRY') {
+                const tab = getActiveTab();
+                if (tab.url) loadUrl(activeTabId, tab.url);
+            }
+        });
 
-        // Address Bar Submit
+        // Form Submit
         urlForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            loadUrlInTab(activeTabId, urlInput.value);
+            loadUrl(activeTabId, urlInput.value);
         });
 
-        // Speed Dial Search Submit
-        speedDialForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            loadUrlInTab(activeTabId, speedDialSearch.value);
-        });
-
-        // New Tab Button
-        newTabBtn.addEventListener('click', () => createNewTab());
-
-        // Navigation Controls
-        backBtn.addEventListener('click', () => {
-            const tab = getActiveTab();
-            if (tab.historyIndex > 0) {
-                tab.historyIndex--;
-                const prevUrl = tab.history[tab.historyIndex];
-                tab.url = prevUrl;
-                urlInput.value = prevUrl;
-                const iframe = document.getElementById(`iframe_${tab.id}`);
-                if (iframe) iframe.src = prevUrl;
-                updateNavButtons();
-            }
-        });
-
-        forwardBtn.addEventListener('click', () => {
-            const tab = getActiveTab();
-            if (tab.historyIndex < tab.history.length - 1) {
-                tab.historyIndex++;
-                const nextUrl = tab.history[tab.historyIndex];
-                tab.url = nextUrl;
-                urlInput.value = nextUrl;
-                const iframe = document.getElementById(`iframe_${tab.id}`);
-                if (iframe) iframe.src = nextUrl;
-                updateNavButtons();
-            }
-        });
-
-        reloadBtn.addEventListener('click', () => {
-            const tab = getActiveTab();
-            const iframe = document.getElementById(`iframe_${tab.id}`);
-            if (iframe && tab.url) {
-                iframe.src = tab.url;
-            }
-        });
-
-        homeBtn.addEventListener('click', () => {
-            const tab = getActiveTab();
-            tab.url = '';
-            tab.title = 'New Tab';
+        newTabBtn.onclick = () => createTab();
+        reloadBtn.onclick = () => { const t = getActiveTab(); if (t.url) loadUrl(activeTabId, t.url); };
+        homeBtn.onclick = () => {
+            const t = getActiveTab();
+            t.url = '';
             urlInput.value = '';
             speedDialView.classList.remove('hidden');
-            renderTabs();
-        });
+        };
 
-        // Bookmark Toggle Button
-        bookmarkBtn.addEventListener('click', toggleBookmark);
-
-        // Bookmarks Bar Display Toggle
-        toggleBookmarksBtn.addEventListener('click', () => {
-            bookmarksBar.classList.toggle('hidden');
-        });
-
-        // External Open Button
-        externalOpenBtn.addEventListener('click', () => {
+        modeSelector.onchange = (e) => {
             const tab = getActiveTab();
-            if (tab.url) {
-                window.open(tab.url, '_blank');
-            }
-        });
+            tab.mode = e.target.value;
+            if (tab.url) loadUrl(activeTabId, tab.url);
+        };
 
-        // Warning bar buttons
-        warningOpenNewTab.addEventListener('click', () => {
-            const tab = getActiveTab();
-            if (tab.url) {
-                window.open(tab.url, '_blank');
-            }
-        });
+        toggleDevToolsBtn.onclick = () => devToolsPanel.classList.toggle('hidden');
+        clearLogsBtn.onclick = () => { logs = []; logOutput.innerHTML = ''; };
+        externalOpenBtn.onclick = () => { const t = getActiveTab(); if (t.url) window.open(t.url, '_blank'); };
 
-        dismissWarning.addEventListener('click', () => {
-            iframeWarning.classList.add('hidden');
-        });
-
-        // Theme Toggle Button
-        themeToggleBtn.addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('nexus_theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('nexus_theme', 'dark');
-            }
-        });
+        // Initialize App
+        window.onload = () => {
+            renderSpeedDial();
+            createTab();
+            addLog('Nexus Proxy Simulator Engine Initialized', 'success');
+        };
     </script>
 </body>
 </html>
