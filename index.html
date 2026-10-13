@@ -13,12 +13,9 @@
                 extend: {
                     colors: {
                         chrome: {
-                            bgLight: '#dee1e6',
-                            toolbarLight: '#f1f3f4',
-                            activeTabLight: '#ffffff',
-                            bgDark: '#1a1b1e',
-                            toolbarDark: '#222327',
-                            activeTabDark: '#2c2d32',
+                            bgDark: '#1e1e22',
+                            toolbarDark: '#28282d',
+                            activeTabDark: '#323238',
                             accent: '#3b82f6'
                         }
                     }
@@ -38,59 +35,52 @@
 </head>
 <body class="h-full bg-slate-900 text-slate-100 flex flex-col overflow-hidden select-none">
 
-    <!-- Top Chrome Header / Tab Bar -->
     <div class="bg-chrome-bgDark pt-2 px-2 flex items-center border-b border-zinc-800">
-        <!-- Mac Style Window Buttons -->
+        <!-- Mac Window Decorations -->
         <div class="flex items-center space-x-2 px-2 mr-3">
             <span class="w-3 h-3 rounded-full bg-red-500 inline-block hover:opacity-80 cursor-pointer"></span>
             <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block hover:opacity-80 cursor-pointer"></span>
             <span class="w-3 h-3 rounded-full bg-green-500 inline-block hover:opacity-80 cursor-pointer"></span>
         </div>
 
-        <!-- Dynamic Tabs Bar -->
-        <div id="tabsContainer" class="flex items-center space-x-1 overflow-x-auto max-w-[calc(100vw-320px)] scrollbar-none">
-            <!-- Rendered by JS -->
+        <!-- Dynamic Tabs Container -->
+        <div id="tabsContainer" class="flex items-center space-x-1 overflow-x-auto max-w-[calc(100vw-280px)] scrollbar-none">
+            <!-- Tabs rendered dynamically via JavaScript -->
         </div>
 
-        <!-- New Tab Button -->
+        <!-- Add Tab Button -->
         <button id="newTabBtn" class="p-1.5 ml-1 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="New Tab">
             <i class="fa-solid fa-plus text-xs"></i>
         </button>
 
         <div class="ml-auto flex items-center space-x-2 pr-2">
-            <!-- DevTools Console Toggle -->
             <button id="toggleDevToolsBtn" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800 hover:bg-zinc-700 text-slate-300 flex items-center space-x-1.5 border border-zinc-700 transition-colors">
                 <i class="fa-solid fa-terminal text-blue-400"></i>
-                <span>Proxy Logs</span>
+                <span>Console Logs</span>
             </button>
         </div>
     </div>
 
-    <!-- Navigation Toolbar -->
     <div class="bg-chrome-toolbarDark p-2 flex items-center space-x-2 shadow-sm border-b border-zinc-800">
-        <!-- Back Button -->
+        <!-- Navigation Buttons -->
         <button id="backBtn" class="p-2 text-slate-400 hover:bg-zinc-800 disabled:opacity-30 rounded-full transition-colors" title="Back">
             <i class="fa-solid fa-arrow-left text-sm"></i>
         </button>
-        <!-- Forward Button -->
         <button id="forwardBtn" class="p-2 text-slate-400 hover:bg-zinc-800 disabled:opacity-30 rounded-full transition-colors" title="Forward">
             <i class="fa-solid fa-arrow-right text-sm"></i>
         </button>
-        <!-- Reload Button -->
         <button id="reloadBtn" class="p-2 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="Reload">
             <i class="fa-solid fa-rotate-right text-sm"></i>
         </button>
-        <!-- Home Button -->
-        <button id="homeBtn" class="p-2 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="Home (Speed Dial)">
+        <button id="homeBtn" class="p-2 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="Speed Dial Home">
             <i class="fa-solid fa-house text-sm"></i>
         </button>
 
-        <!-- Mode Selector Switcher -->
-        <div class="relative group">
+        <!-- Mode Selector -->
+        <div class="relative">
             <select id="modeSelector" class="bg-zinc-900 border border-zinc-700 text-xs text-slate-200 py-1.5 px-2.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer font-medium">
-                <option value="proxy">⚡ Proxy Engine (Bypass X-Frame)</option>
-                <option value="direct">🌐 Direct Embed (Standard Iframe)</option>
-                <option value="text">📄 Text / Code Viewer</option>
+                <option value="proxy">⚡ Auto-Proxy (Failover)</option>
+                <option value="direct">🌐 Direct Iframe</option>
             </select>
         </div>
 
@@ -99,84 +89,65 @@
             <div class="absolute left-3 text-slate-500 text-xs flex items-center space-x-1.5">
                 <i id="securityIcon" class="fa-solid fa-shield-halved text-emerald-400"></i>
             </div>
-            <input id="urlInput" type="text" placeholder="Search with DuckDuckGo or enter URL (e.g. github.com)..."
-                   class="w-full bg-zinc-900 text-slate-100 text-sm pl-8 pr-24 py-1.5 rounded-full border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner">
+            <input id="urlInput" type="text" placeholder="Enter URL or search term (e.g. wikipedia.org)..."
+                   class="w-full bg-zinc-900 text-slate-100 text-sm pl-8 pr-16 py-1.5 rounded-full border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner">
             <div class="absolute right-2 flex items-center space-x-1">
-                <button type="button" id="bookmarkBtn" class="p-1 text-slate-500 hover:text-yellow-400 transition-colors" title="Bookmark page">
-                    <i class="fa-regular fa-star text-sm"></i>
-                </button>
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-full font-medium transition-colors">
                     Go
                 </button>
             </div>
         </form>
 
-        <!-- Proxy Provider Settings Dropdown -->
-        <select id="proxyEngineSelector" class="bg-zinc-900 border border-zinc-700 text-xs text-slate-300 py-1.5 px-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <option value="corsproxy">Proxy: CorsProxy.io</option>
-            <option value="allorigins">Proxy: AllOrigins.win</option>
-            <option value="codetabs">Proxy: CodeTabs</option>
-        </select>
-
         <!-- External Tab Button -->
-        <button id="externalOpenBtn" class="p-2 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="Open URL in Real Browser Tab">
+        <button id="externalOpenBtn" class="p-2 text-slate-400 hover:bg-zinc-800 rounded-full transition-colors" title="Open in Real Browser Tab">
             <i class="fa-solid fa-up-right-from-square text-sm"></i>
         </button>
     </div>
 
-    <!-- Loading & Status Bar -->
     <div id="statusBar" class="bg-zinc-950 px-4 py-1 text-xs text-slate-400 border-b border-zinc-800 flex items-center justify-between">
         <div class="flex items-center space-x-2">
             <span id="statusSpinner" class="hidden"><i class="fa-solid fa-circle-notch fa-spin text-blue-400"></i></span>
             <span id="statusText">Ready</span>
         </div>
         <div class="flex items-center space-x-4 text-[11px] text-slate-500">
-            <span id="proxyLatency">Latency: --</span>
-            <span id="linksRewrittenCount">Links Hijacked: 0</span>
+            <span id="proxyUsedInfo">Proxy: None</span>
+            <span id="linksHijackedInfo">Links Rewritten: 0</span>
         </div>
     </div>
 
-    <!-- Main Content Area -->
     <div class="flex-1 relative bg-zinc-950 overflow-hidden flex">
         
-        <!-- Speed Dial / Home Dashboard -->
+        <!-- Speed Dial Home Screen -->
         <div id="speedDialView" class="absolute inset-0 z-10 overflow-y-auto p-6 flex flex-col items-center bg-zinc-950">
             <div class="max-w-4xl w-full flex flex-col items-center mt-6 mb-8">
                 <div class="flex items-center space-x-3 mb-4">
                     <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                        <i class="fa-solid fa-bolt text-white text-2xl"></i>
+                        <i class="fa-solid fa-compass text-white text-2xl"></i>
                     </div>
                     <h1 class="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                        Nexus Proxy Browser | Made by Mogger!
+                        Nexus Browser | Made by Mogger!
                     </h1>
                 </div>
                 <p class="text-sm text-slate-400 mb-6 text-center max-w-lg">
-                    Client-side browser simulator that fetches site HTML via CORS proxy pipelines, rewrites links, strips X-Frame-Options/CSP restrictions, and renders inside sandboxed <code class="text-blue-400 bg-zinc-900 px-1 rounded">srcdoc</code> frames.
+                    A client-side browser emulator featuring multi-proxy failover, automatic link hijacking, and CSP/frame restriction neutralization.
                 </p>
 
-                <!-- Speed Dial Grid -->
+                <!-- Preset Speed Dial Grid -->
                 <div class="w-full mt-4">
                     <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 px-1">
-                        Popular Presets (Bypass Demo)
+                        Popular Presets & Websites
                     </h2>
                     <div id="speedDialGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        <!-- Rendered by JS -->
+                        <!-- Speed dial items rendered dynamically -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Render Viewport Containers -->
-        <div id="viewportContainer" class="w-full h-full relative flex-1">
-            <!-- Dynamic IFrames created per tab -->
-        </div>
+        <!-- Viewport Containers (Dynamic IFrames created per tab) -->
+        <div id="viewportContainer" class="w-full h-full relative flex-1"></div>
 
-        <!-- Code/Text View Panel -->
-        <div id="textViewPanel" class="hidden absolute inset-0 z-20 bg-zinc-950 p-4 overflow-auto">
-            <pre id="textContent" class="text-xs text-green-400 font-mono whitespace-pre-wrap break-all"></pre>
-        </div>
-
-        <!-- DevTools Log Panel -->
+        <!-- Console Log DevTools Panel -->
         <div id="devToolsPanel" class="hidden w-80 bg-zinc-900 border-l border-zinc-800 flex flex-col z-30">
             <div class="p-2.5 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between text-xs font-semibold">
                 <span class="flex items-center space-x-1.5">
@@ -185,29 +156,36 @@
                 </span>
                 <button id="clearLogsBtn" class="text-slate-500 hover:text-slate-300 text-[10px]">Clear</button>
             </div>
-            <div id="logOutput" class="flex-1 p-3 font-mono text-[11px] overflow-y-auto space-y-2 text-slate-300">
-                <!-- Logs rendered by JS -->
-            </div>
+            <div id="logOutput" class="flex-1 p-3 font-mono text-[11px] overflow-y-auto space-y-2 text-slate-300"></div>
         </div>
     </div>
 
     <script>
-        // Preset speed dial bookmarks
+        // Preset Speed Dial Bookmarks
         const PRESET_SITES = [
-            { name: "DuckDuckGo", url: "https://html.duckduckgo.com/html/", icon: "fa-solid fa-shield-halved", color: "bg-orange-600" },
-            { name: "GitHub Trending", url: "https://github.com/trending", icon: "fa-brands fa-github", color: "bg-zinc-800" },
             { name: "Wikipedia", url: "https://www.wikipedia.org", icon: "fa-brands fa-wikipedia-w", color: "bg-slate-700" },
             { name: "Hacker News", url: "https://news.ycombinator.com", icon: "fa-brands fa-y-combinator", color: "bg-amber-600" },
-            { name: "BBC News", url: "https://www.bbc.com/news", icon: "fa-solid fa-newspaper", color: "bg-red-700" },
-            { name: "OpenStreetMap", url: "https://www.openstreetmap.org", icon: "fa-solid fa-map-location-dot", color: "bg-emerald-600" }
+            { name: "OpenStreetMap", url: "https://www.openstreetmap.org", icon: "fa-solid fa-map-location-dot", color: "bg-emerald-600" },
+            { name: "W3Schools", url: "https://www.w3schools.com", icon: "fa-solid fa-code", color: "bg-green-700" },
+            { name: "Archive.org", url: "https://archive.org", icon: "fa-solid fa-vault", color: "bg-zinc-700" },
+            { name: "CodePen Trending", url: "https://codepen.io/popular", icon: "fa-brands fa-codepen", color: "bg-purple-600" },
+            { name: "Bing Search", url: "https://www.bing.com", icon: "fa-brands fa-microsoft", color: "bg-blue-600" },
+            { name: "DuckDuckGo HTML", url: "https://html.duckduckgo.com/html/", icon: "fa-solid fa-shield-halved", color: "bg-orange-600" }
         ];
 
-        // State variables
+        // CORS Proxy Endpoints Pool for Sequential Failover
+        const PROXY_ENDPOINTS = [
+            { id: "allorigins", name: "AllOrigins", format: (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
+            { id: "corsproxy", name: "CorsProxy.io", format: (u) => `https://corsproxy.io/?${encodeURIComponent(u)}` },
+            { id: "codetabs", name: "CodeTabs", format: (u) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` }
+        ];
+
+        // Global State Management
         let tabs = [];
         let activeTabId = null;
         let logs = [];
 
-        // DOM elements
+        // DOM Elements References
         const tabsContainer = document.getElementById('tabsContainer');
         const newTabBtn = document.getElementById('newTabBtn');
         const urlForm = document.getElementById('urlForm');
@@ -217,41 +195,51 @@
         const reloadBtn = document.getElementById('reloadBtn');
         const homeBtn = document.getElementById('homeBtn');
         const modeSelector = document.getElementById('modeSelector');
-        const proxyEngineSelector = document.getElementById('proxyEngineSelector');
         const speedDialView = document.getElementById('speedDialView');
         const speedDialGrid = document.getElementById('speedDialGrid');
         const viewportContainer = document.getElementById('viewportContainer');
-        const textViewPanel = document.getElementById('textViewPanel');
-        const textContent = document.getElementById('textContent');
         const devToolsPanel = document.getElementById('devToolsPanel');
         const toggleDevToolsBtn = document.getElementById('toggleDevToolsBtn');
         const logOutput = document.getElementById('logOutput');
         const clearLogsBtn = document.getElementById('clearLogsBtn');
         const statusSpinner = document.getElementById('statusSpinner');
         const statusText = document.getElementById('statusText');
-        const proxyLatency = document.getElementById('proxyLatency');
-        const linksRewrittenCount = document.getElementById('linksRewrittenCount');
+        const proxyUsedInfo = document.getElementById('proxyUsedInfo');
+        const linksHijackedInfo = document.getElementById('linksHijackedInfo');
         const externalOpenBtn = document.getElementById('externalOpenBtn');
 
-        // Construct CORS Proxy URL
-        function buildProxyUrl(targetUrl, engine) {
-            switch(engine) {
-                case 'allorigins':
-                    return `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-                case 'codetabs':
-                    return `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
-                case 'corsproxy':
-                default:
-                    return `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
-            }
+        function addLog(msg, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            logs.push({ time, msg, type });
+            const logEl = document.createElement('div');
+            logEl.className = type === 'error' ? 'text-red-400' : (type === 'success' ? 'text-emerald-400' : 'text-slate-300');
+            logEl.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
+            logOutput.appendChild(logEl);
+            logOutput.scrollTop = logOutput.scrollHeight;
         }
 
-        // HTML Sanitizer & Link Rewriter Engine
+        function formatUrlInput(input) {
+            let query = input.trim();
+            if (!query) return '';
+            // Handle search queries or valid URLs
+            if (!query.includes('.') && !query.startsWith('http://') && !query.startsWith('https://')) {
+                return `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
+            }
+            if (!query.startsWith('http://') && !query.startsWith('https://')) {
+                return 'https://' + query;
+            }
+            return query;
+        }
+
+        function getHostname(urlStr) {
+            try { return new URL(urlStr).hostname; } catch(e) { return urlStr || 'New Tab'; }
+        }
+
         function processAndRewriteHtml(rawHtml, baseUrl) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(rawHtml, 'text/html');
 
-            // 1. Inject base tag so relative CSS/JS/images load correctly
+            // 1. Inject base tag for relative asset resolution (CSS, JS, Images)
             let baseEl = doc.querySelector('base');
             if (!baseEl) {
                 baseEl = doc.createElement('base');
@@ -259,18 +247,24 @@
             }
             baseEl.setAttribute('href', baseUrl);
 
-            // 2. Remove frame-busting CSP meta tags
+            // 2. Remove CSP and X-Frame-Options meta tags
             doc.querySelectorAll('meta[http-equiv="Content-Security-Policy"], meta[http-equiv="X-Frame-Options"]').forEach(el => el.remove());
 
-            // 3. Rewrite internal links so clicking navigates inside our proxy simulator
+            // 3. Neutralize frame-busting scripts
+            doc.querySelectorAll('script').forEach(script => {
+                if (script.textContent && (script.textContent.includes('top.location') || script.textContent.includes('parent.location'))) {
+                    script.textContent = script.textContent.replace(/top\.location/g, 'void_top_loc').replace(/parent\.location/g, 'void_parent_loc');
+                }
+            });
+
+            // 4. Intercept link clicks inside iframe
             let hijackedCount = 0;
             doc.querySelectorAll('a[href]').forEach(anchor => {
                 const href = anchor.getAttribute('href');
                 if (href && !href.startsWith('javascript:') && !href.startsWith('#')) {
                     try {
                         const absoluteUrl = new URL(href, baseUrl).href;
-                        anchor.setAttribute('data-original-href', absoluteUrl);
-                        // Prevent default target="_blank" forcing new window
+                        anchor.setAttribute('data-nexus-url', absoluteUrl);
                         anchor.removeAttribute('target');
                         anchor.setAttribute('onclick', `
                             event.preventDefault();
@@ -281,14 +275,14 @@
                 }
             });
 
-            // 4. Inject link hijacking listener script inside the frame
+            // 5. Inject client bridge listener inside frame
             const bridgeScript = doc.createElement('script');
             bridgeScript.textContent = `
                 document.addEventListener('click', function(e) {
                     let target = e.target.closest('a');
-                    if (target && target.hasAttribute('data-original-href')) {
+                    if (target && target.hasAttribute('data-nexus-url')) {
                         e.preventDefault();
-                        const dest = target.getAttribute('data-original-href');
+                        const dest = target.getAttribute('data-nexus-url');
                         window.parent.postMessage({ type: 'NEXUS_NAVIGATE', url: dest }, '*');
                     }
                 }, true);
@@ -301,18 +295,31 @@
             };
         }
 
-        // Add Log Entry to DevTools
-        function addLog(msg, type = 'info') {
-            const time = new Date().toLocaleTimeString();
-            logs.push({ time, msg, type });
-            const logEl = document.createElement('div');
-            logEl.className = type === 'error' ? 'text-red-400' : (type === 'success' ? 'text-emerald-400' : 'text-slate-300');
-            logEl.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
-            logOutput.appendChild(logEl);
-            logOutput.scrollTop = logOutput.scrollHeight;
+        async function fetchWithFailover(targetUrl) {
+            let lastError = null;
+
+            for (const proxy of PROXY_ENDPOINTS) {
+                const proxiedUrl = proxy.format(targetUrl);
+                addLog(`Attempting fetch via ${proxy.name}...`);
+                
+                try {
+                    const response = await fetch(proxiedUrl);
+                    if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+                    
+                    const text = await response.text();
+                    if (!text || text.trim().length === 0) throw new Error("Empty response body");
+
+                    addLog(`Successfully retrieved content via ${proxy.name}`, 'success');
+                    return { html: text, proxyName: proxy.name };
+                } catch (err) {
+                    addLog(`Proxy ${proxy.name} failed: ${err.message}`, 'error');
+                    lastError = err;
+                }
+            }
+
+            throw lastError || new Error("All proxy attempts failed.");
         }
 
-        // Tab Creator
         function createTab(url = '') {
             const id = 'tab_' + Date.now();
             const tab = {
@@ -326,7 +333,7 @@
 
             tabs.push(tab);
 
-            // Create container iframe
+            // Create corresponding IFrame viewport
             const iframe = document.createElement('iframe');
             iframe.id = `iframe_${id}`;
             iframe.className = 'w-full h-full border-none hidden';
@@ -365,6 +372,7 @@
         function closeTab(id, e) {
             if (e) e.stopPropagation();
             if (tabs.length === 1) {
+                // Reset sole remaining tab
                 const tab = tabs[0];
                 tab.url = '';
                 tab.title = 'New Tab';
@@ -412,10 +420,6 @@
             return tabs.find(t => t.id === activeTabId) || tabs[0];
         }
 
-        function getHostname(url) {
-            try { return new URL(url).hostname; } catch(e) { return url; }
-        }
-
         function updateNavButtons() {
             const tab = getActiveTab();
             backBtn.disabled = tab.historyIndex <= 0;
@@ -426,90 +430,100 @@
             const tab = tabs.find(t => t.id === tabId);
             if (!tab) return;
 
-            let targetUrl = inputUrl.trim();
-            if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
-                targetUrl = 'https://' + targetUrl;
-            }
+            const targetUrl = formatUrlInput(inputUrl);
+            if (!targetUrl) return;
 
+            // Update tab metadata & history
             tab.url = targetUrl;
             tab.title = getHostname(targetUrl);
+            if (tab.history[tab.historyIndex] !== targetUrl) {
+                tab.history = tab.history.slice(0, tab.historyIndex + 1);
+                tab.history.push(targetUrl);
+                tab.historyIndex = tab.history.length - 1;
+            }
+
             urlInput.value = targetUrl;
             speedDialView.classList.add('hidden');
             renderTabs();
+            updateNavButtons();
 
             const iframe = document.getElementById(`iframe_${tabId}`);
 
             if (tab.mode === 'direct') {
-                // Direct iframe load
-                addLog(`Loading direct iframe for: ${targetUrl}`);
+                addLog(`Loading direct iframe src for: ${targetUrl}`);
                 iframe.removeAttribute('srcdoc');
                 iframe.src = targetUrl;
                 statusText.textContent = 'Loaded directly';
+                proxyUsedInfo.textContent = 'Proxy: Direct';
+                linksHijackedInfo.textContent = 'Links Rewritten: N/A';
                 return;
             }
 
-            // Proxy Engine Mode
+            // Proxy Mode
             statusSpinner.classList.remove('hidden');
-            statusText.textContent = `Fetching via Proxy engine...`;
-            const startTime = performance.now();
-
-            const proxyEngine = proxyEngineSelector.value;
-            const proxiedUrl = buildProxyUrl(targetUrl, proxyEngine);
-
-            addLog(`Requesting proxy: ${proxiedUrl}`);
+            statusText.textContent = `Fetching via Proxy Failover Engine...`;
 
             try {
-                const response = await fetch(proxiedUrl);
-                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-                
-                const htmlText = await response.text();
-                const latency = Math.round(performance.now() - startTime);
-                proxyLatency.textContent = `Latency: ${latency}ms`;
+                const { html: rawHtml, proxyName } = await fetchWithFailover(targetUrl);
+                const { html: processedHtml, linksHijacked } = processAndRewriteHtml(rawHtml, targetUrl);
 
-                addLog(`Successfully fetched (${htmlText.length} bytes in ${latency}ms)`, 'success');
+                proxyUsedInfo.textContent = `Proxy: ${proxyName}`;
+                linksHijackedInfo.textContent = `Links Rewritten: ${linksHijacked}`;
 
-                if (tab.mode === 'text') {
-                    textContent.textContent = htmlText;
-                    textViewPanel.classList.remove('hidden');
-                } else {
-                    textViewPanel.classList.add('hidden');
-                    // Process HTML and rewrite relative links
-                    const { html, linksHijacked } = processAndRewriteHtml(htmlText, targetUrl);
-                    linksRewrittenCount.textContent = `Links Hijacked: ${linksHijacked}`;
-                    addLog(`Rewrote ${linksHijacked} links and injected base tag`, 'success');
-
-                    iframe.removeAttribute('src');
-                    iframe.srcdoc = html;
-                }
-
-                statusText.textContent = 'Rendered via Proxy Engine';
+                iframe.removeAttribute('src');
+                iframe.srcdoc = processedHtml;
+                statusText.textContent = 'Rendered successfully';
             } catch (err) {
-                addLog(`Proxy Error: ${err.message}`, 'error');
-                statusText.textContent = 'Proxy failed. Switching fallback...';
-                
-                // Fallback display
+                addLog(`All proxy attempts failed for ${targetUrl}: ${err.message}`, 'error');
+                statusText.textContent = 'Proxy fetch failed';
+                proxyUsedInfo.textContent = 'Proxy: Failed';
+
+                // Display Clean Error Card inside Frame Area
+                iframe.removeAttribute('src');
                 iframe.srcdoc = `
-                    <div style="font-family: sans-serif; padding: 40px; color: #e2e8f0; background: #090d16; height: 100vh;">
-                        <h2 style="color: #f87171;">Proxy Fetch Failed</h2>
-                        <p>Could not fetch <code>${targetUrl}</code> using current proxy configuration.</p>
-                        <p>Error details: ${err.message}</p>
-                        <button onclick="window.parent.postMessage({type:'NEXUS_RETRY'}, '*')" style="background:#2563eb; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Retry</button>
-                    </div>
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script src="https://cdn.tailwindcss.com"><\/script>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    </head>
+                    <body class="bg-zinc-950 text-slate-200 h-screen flex flex-col items-center justify-center p-6 font-sans">
+                        <div class="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-2xl p-6 text-center shadow-2xl">
+                            <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                            </div>
+                            <h2 class="text-xl font-bold mb-2 text-white">Page Couldn't Be Loaded</h2>
+                            <p class="text-xs text-slate-400 mb-6">
+                                Unable to fetch <code class="text-blue-400 font-mono">${targetUrl}</code> via public CORS proxy endpoints due to network restrictions or server rate limits.
+                            </p>
+                            <div class="flex flex-col gap-2">
+                                <button onclick="window.parent.postMessage({type:'NEXUS_RETRY'}, '*')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 px-4 rounded-xl font-medium transition-colors">
+                                    <i class="fa-solid fa-rotate-right mr-1.5"></i> Retry Fetch
+                                </button>
+                                <button onclick="window.parent.postMessage({type:'NEXUS_DIRECT'}, '*')" class="w-full bg-zinc-800 hover:bg-zinc-700 text-slate-200 text-xs py-2 px-4 rounded-xl font-medium border border-zinc-700 transition-colors">
+                                    <i class="fa-solid fa-globe mr-1.5"></i> Try Direct Iframe
+                                </button>
+                                <button onclick="window.open('${targetUrl}', '_blank')" class="w-full bg-transparent hover:bg-zinc-800/50 text-slate-400 text-xs py-2 px-4 rounded-xl transition-colors">
+                                    Open in New Browser Tab <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
                 `;
             } finally {
                 statusSpinner.classList.add('hidden');
             }
         }
 
-        // Speed dial renderer
         function renderSpeedDial() {
             speedDialGrid.innerHTML = '';
             PRESET_SITES.forEach(site => {
                 const card = document.createElement('div');
-                card.className = 'bg-zinc-900 border border-zinc-800 p-4 rounded-xl hover:border-blue-500 transition-all cursor-pointer flex flex-col items-center space-y-3';
+                card.className = 'bg-zinc-900 border border-zinc-800 p-4 rounded-xl hover:border-blue-500 transition-all cursor-pointer flex flex-col items-center space-y-3 group';
                 card.onclick = () => loadUrl(activeTabId, site.url);
                 card.innerHTML = `
-                    <div class="w-10 h-10 rounded-lg ${site.color} text-white flex items-center justify-center text-lg">
+                    <div class="w-10 h-10 rounded-lg ${site.color} text-white flex items-center justify-center text-lg group-hover:scale-105 transition-transform">
                         <i class="${site.icon}"></i>
                     </div>
                     <span class="text-xs font-medium text-slate-300 truncate w-full text-center">${site.name}</span>
@@ -518,18 +532,23 @@
             });
         }
 
-        // Cross-frame iframe postMessage listener
+        // Handle Messages from Embedded Frames
         window.addEventListener('message', (event) => {
             if (event.data?.type === 'NEXUS_NAVIGATE') {
-                addLog(`Intercepted cross-frame link click -> ${event.data.url}`);
+                addLog(`Intercepted internal navigation to: ${event.data.url}`);
                 loadUrl(activeTabId, event.data.url);
             } else if (event.data?.type === 'NEXUS_RETRY') {
                 const tab = getActiveTab();
                 if (tab.url) loadUrl(activeTabId, tab.url);
+            } else if (event.data?.type === 'NEXUS_DIRECT') {
+                const tab = getActiveTab();
+                tab.mode = 'direct';
+                modeSelector.value = 'direct';
+                if (tab.url) loadUrl(activeTabId, tab.url);
             }
         });
 
-        // Form Submit
+        // Form Submission & Controls Listeners
         urlForm.addEventListener('submit', (e) => {
             e.preventDefault();
             loadUrl(activeTabId, urlInput.value);
@@ -544,6 +563,22 @@
             speedDialView.classList.remove('hidden');
         };
 
+        backBtn.onclick = () => {
+            const t = getActiveTab();
+            if (t.historyIndex > 0) {
+                t.historyIndex--;
+                loadUrl(activeTabId, t.history[t.historyIndex]);
+            }
+        };
+
+        forwardBtn.onclick = () => {
+            const t = getActiveTab();
+            if (t.historyIndex < t.history.length - 1) {
+                t.historyIndex++;
+                loadUrl(activeTabId, t.history[t.historyIndex]);
+            }
+        };
+
         modeSelector.onchange = (e) => {
             const tab = getActiveTab();
             tab.mode = e.target.value;
@@ -554,11 +589,11 @@
         clearLogsBtn.onclick = () => { logs = []; logOutput.innerHTML = ''; };
         externalOpenBtn.onclick = () => { const t = getActiveTab(); if (t.url) window.open(t.url, '_blank'); };
 
-        // Initialize App
+        // Initialize Application
         window.onload = () => {
             renderSpeedDial();
             createTab();
-            addLog('Nexus Proxy Simulator Engine Initialized', 'success');
+            addLog('Nexus Browser Simulator Engine Initialized', 'success');
         };
     </script>
 </body>
