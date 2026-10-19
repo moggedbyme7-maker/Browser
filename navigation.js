@@ -55,3 +55,32 @@ class NavigationController {
 
 // Instantiate globally
 window.navigationController = new NavigationController();
+/**
+ * navigation.js - Navigation, History, and Link Interception Logic
+ */
+
+class NavigationController {
+  /**
+   * Formats raw user input into internal protocol, valid HTTP/HTTPS URL, or search query
+   */
+  formatUrl(input) {
+    let cleanInput = input.trim();
+    if (!cleanInput) return "";
+
+    // 1. Intercept custom internal URI scheme
+    if (cleanInput.startsWith("browser://") || cleanInput.startsWith("about:")) {
+      return cleanInput.toLowerCase();
+    }
+
+    // 2. Standard web URL handling
+    if (!cleanInput.startsWith("http://") && !cleanInput.startsWith("https://")) {
+      if (cleanInput.includes(".") && !cleanInput.includes(" ")) {
+        return "https://" + cleanInput;
+      }
+      return `https://duckduckgo.com/?q=${encodeURIComponent(cleanInput)}`;
+    }
+    return cleanInput;
+  }
+
+  // Rest of navigation.js remains unchanged...
+}
