@@ -8,7 +8,8 @@ const SPEED_DIAL_PRESETS = [
   { title: "Archive.org", url: "https://archive.org", icon: "🏛️" },
   { title: "CodePen", url: "https://codepen.io", icon: "💻" },
   { title: "Bing", url: "https://www.bing.com", icon: "🔍" },
-  { title: "DuckDuckGo", url: "https://duckduckgo.com", icon: "🦆" }
+  { title: "DuckDuckGo", url: "https://duckduckgo.com", icon: "🦆" },
+  { title: "Mogged Games", url: "mogger://games", icon: "🎮"},
 ];
 
 class App {
