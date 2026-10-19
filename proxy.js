@@ -212,6 +212,151 @@ class ProxyEngine {
         `;
     }
   }
+  renderInternalPage(url) {
+  const page = url.replace("mogger://", "").replace("about:", "").replace(/\/$/, "");
+
+  switch (page) {
+    case "games":
+    case "arcade":
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+            body { background: #1e1e2e; color: #cdd6f4; padding: 24px; min-height: 100vh; }
+            h1 { color: #89b4fa; margin-bottom: 8px; font-size: 28px; }
+            p.sub { color: #a6adc8; margin-bottom: 24px; font-size: 14px; }
+            
+            .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+            .game-card { background: #252538; border: 1px solid #45475a; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+            .game-card h3 { color: #a6e3a1; font-size: 18px; }
+            .game-card p { color: #a6adc8; font-size: 13px; }
+            
+            canvas { background: #11111b; border: 2px solid #45475a; border-radius: 8px; margin-top: 8px; }
+            .controls { display: flex; gap: 8px; margin-top: 8px; }
+            button { background: #89b4fa; color: #11111b; border: none; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+            button:hover { background: #b4befe; }
+          </style>
+        </head>
+        <body>
+          <h1>🎮 mogger://games</h1>
+          <p class="sub">Built-in unblocked mini-games running fully client-side.</p>
+
+          <div class="games-grid">
+            <!-- Snake Game Card -->
+            <div class="game-card">
+              <h3>🐍 Snake</h3>
+              <p>Use Arrow Keys to eat food and grow.</p>
+              <canvas id="snakeCanvas" width="200" height="200"></canvas>
+              <div class="controls">
+                <button id="startSnake">Play / Reset</button>
+              </div>
+            </div>
+
+            <!-- Tic Tac Toe Card -->
+            <div class="game-card">
+              <h3>❌ Tic-Tac-Toe ⭕</h3>
+              <p>Play against local opponent or AI.</p>
+              <div id="tttBoard" style="display:grid; grid-template-columns:repeat(3,60px); gap:6px; margin:12px 0;"></div>
+              <button id="resetTTT">Reset Game</button>
+            </div>
+          </div>
+
+          <script>
+            // --- Snake Logic ---
+            const canvas = document.getElementById('snakeCanvas');
+            const ctx = canvas.getContext('2d');
+            let snake, food, dx, dy, gameInterval;
+
+            function initSnake() {
+              clearInterval(gameInterval);
+              snake = [{x: 100, y: 100}, {x: 90, y: 100}, {x: 80, y: 100}];
+              food = {x: 50, y: 50};
+              dx = 10; dy = 0;
+              gameInterval = setInterval(updateSnake, 100);
+            }
+
+            function updateSnake() {
+              const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+              if (head.x < 0 || head.x >= 200 || head.y < 0 || head.y >= 200 || snake.some(s => s.x === head.x && s.y === head.y)) {
+                clearInterval(gameInterval);
+                ctx.fillStyle = "#f38ba8";
+                ctx.font = "16px sans-serif";
+                ctx.fillText("Game Over!", 50, 100);
+                return;
+              }
+
+              snake.unshift(head);
+              if (head.x === food.x && head.y === food.y) {
+                food = {
+                  x: Math.floor(Math.random() * 20) * 10,
+                  y: Math.floor(Math.random() * 20) * 10
+                };
+              } else {
+                snake.pop();
+              }
+
+              ctx.fillStyle = "#11111b";
+              ctx.fillRect(0, 0, 200, 200);
+
+              ctx.fillStyle = "#f38ba8";
+              ctx.fillRect(food.x, food.y, 10, 10);
+
+              ctx.fillStyle = "#a6e3a1";
+              snake.forEach(part => ctx.fillRect(part.x, part.y, 10, 10));
+            }
+
+            window.addEventListener('keydown', e => {
+              if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -10; }
+              if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 10; }
+              if (e.key === 'ArrowLeft' && dx === 0) { dx = -10; dy = 0; }
+              if (e.key === 'ArrowRight' && dx === 0) { dx = 10; dy = 0; }
+            });
+
+            document.getElementById('startSnake').addEventListener('click', initSnake);
+
+            // --- Tic Tac Toe Logic ---
+            const boardEl = document.getElementById('tttBoard');
+            let board = Array(9).fill('');
+            let turn = 'X';
+
+            function renderTTT() {
+              boardEl.innerHTML = '';
+              board.forEach((cell, idx) => {
+                const btn = document.createElement('button');
+                btn.style.cssText = "width:60px; height:60px; font-size:20px; background:#313244; color:#cdd6f4;";
+                btn.textContent = cell;
+                btn.addEventListener('click', () => {
+                  if (!board[idx]) {
+                    board[idx] = turn;
+                    turn = turn === 'X' ? 'O' : 'X';
+                    renderTTT();
+                  }
+                });
+                boardEl.appendChild(btn);
+              });
+            }
+
+            document.getElementById('resetTTT').addEventListener('click', () => {
+              board = Array(9).fill('');
+              turn = 'X';
+              renderTTT();
+            });
+
+            renderTTT();
+          </script>
+        </body>
+        </html>
+      `;
+
+    // Existing cases...
+    case "settings":
+    case "config":
+      // ...
+      break;
+  }
+}
 
   // PrepareHtmlForIframe method remains unchanged...
 }
