@@ -81,6 +81,24 @@ class NavigationController {
     }
     return cleanInput;
   }
-
   // Rest of navigation.js remains unchanged...
+}
+pushHistory(tab, url) {
+  tab.url = url;
+  if (tab.history[tab.historyIndex] !== url) {
+    tab.history = tab.history.slice(0, tab.historyIndex + 1);
+    tab.history.push(url);
+    tab.historyIndex = tab.history.length - 1;
+  }
+
+  try {
+    if (url.startsWith("mogger://")) {
+      const page = url.replace("mogger://", "");
+      tab.title = page ? `mogger: ${page}` : "mogger://";
+    } else {
+      tab.title = new URL(url).hostname || url;
+    }
+  } catch {
+    tab.title = url;
+  }
 }
