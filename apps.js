@@ -36,6 +36,9 @@ class App {
       if (e.key === "Enter") {
         const targetUrl = window.navigationController.formatUrl(this.addressBar.value);
         if (targetUrl) this.loadPage(targetUrl);
+        document.getElementById("btnThemeModal").addEventListener("click", () => {
+  window.themeManager.toggleModal();
+});
       }
     });
 
